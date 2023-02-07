@@ -29,6 +29,7 @@ tracing-subscriber = "0.3"
 console_error_panic_hook = "0.1.6"
 tracing-wasm = "0.2"
 wasm-bindgen-futures = "0.4"
+getrandom = { version = "0.2", features = ["js"] } # enable WASM support for the rand crate
 
 
 [profile.release]
