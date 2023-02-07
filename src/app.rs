@@ -5,7 +5,6 @@ mod bouncing_ball;
 // const DARK_BLUE:Color32 = Color32::DARK_BLUE;
 // const DARK_RED:Color32 = Color32::DARK_RED;
 
-
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
@@ -15,7 +14,6 @@ pub struct TemplateApp {
     animation: bouncing_ball::AnimationState,
 }
 
-
 impl Default for TemplateApp {
     fn default() -> Self {
         Self {
@@ -24,7 +22,6 @@ impl Default for TemplateApp {
         }
     }
 }
-
 
 impl TemplateApp {
     /// Called once before the first frame.
@@ -51,7 +48,7 @@ impl eframe::App for TemplateApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        let Self {  ball , animation} = self;
+        let Self { ball, animation } = self;
 
         egui::SidePanel::left("side_panel").show(ctx, |ui| {
             ui.heading("Animation control");
@@ -64,7 +61,7 @@ impl eframe::App for TemplateApp {
             if ui.button(button_text).clicked() {
                 *animation = match *animation {
                     bouncing_ball::AnimationState::Paused => bouncing_ball::AnimationState::Active,
-                    bouncing_ball::AnimationState::Active => bouncing_ball::AnimationState::Paused
+                    bouncing_ball::AnimationState::Active => bouncing_ball::AnimationState::Paused,
                 }
             }
 
@@ -98,8 +95,8 @@ impl eframe::App for TemplateApp {
             painter.rect_filled(
                 Rect::from_min_max(
                     painter.clip_rect().left_top() + vec2(0.0, 0.0),
-                    painter.clip_rect().right_bottom() + vec2(0.0, -0.0)
-                ), 
+                    painter.clip_rect().right_bottom() + vec2(0.0, -0.0),
+                ),
                 3.0,
                 Color32::LIGHT_GRAY,
             );
@@ -108,16 +105,15 @@ impl eframe::App for TemplateApp {
                 bouncing_ball::AnimationState::Active => {
                     ball.update(&painter);
                     ui.ctx().request_repaint();
-                },
-                _ => ()
+                }
+                _ => (),
             }
-            ball.draw(painter); 
+            ball.draw(painter);
 
             // close the app if esc key pressed
             if ui.input().key_pressed(egui::Key::Escape) {
                 _frame.close();
             }
-
         });
 
         if false {

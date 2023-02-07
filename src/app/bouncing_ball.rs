@@ -5,9 +5,8 @@ use egui::*;
 #[derive(serde::Deserialize, serde::Serialize)]
 pub enum AnimationState {
     Paused,
-    Active
+    Active,
 }
-
 
 #[derive(serde::Deserialize, serde::Serialize)]
 pub struct Ball {
@@ -17,7 +16,7 @@ pub struct Ball {
     velocity: Vec2,
     acceleration: Vec2,
     elasticity: Vec2,
-    animation: AnimationState
+    animation: AnimationState,
 }
 
 impl Ball {
@@ -32,7 +31,7 @@ impl Ball {
             animation: AnimationState::Paused,
         }
     }
-    
+
     pub fn update(&mut self, painter: &Painter) {
         // println!("ball is at {:?} with color {:?}", self.position, self.fill_color);
         self.position += self.velocity;
@@ -47,18 +46,18 @@ impl Ball {
             self.position.x = painter.clip_rect().width() - self.radius;
             self.velocity.x *= -1.0;
         }
-        if self.position.x <=  self.radius {
-            self.position.x =  self.radius;
+        if self.position.x <= self.radius {
+            self.position.x = self.radius;
             self.velocity.x *= -1.0;
         }
         self.velocity += self.acceleration;
     }
-    
+
     pub fn draw(&self, painter: &Painter) {
         painter.circle_filled(
             painter.clip_rect().left_bottom() + vec2(self.position.x, -self.position.y),
             self.radius,
             self.fill_color,
         );
-    } 
+    }
 }
