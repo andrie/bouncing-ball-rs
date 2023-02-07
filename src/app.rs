@@ -16,7 +16,7 @@ pub struct TemplateApp {
 impl Default for TemplateApp {
     fn default() -> Self {
         Self {
-            ball: vec!(bouncing_ball::Ball::new()),
+            ball: vec![bouncing_ball::Ball::new()],
             elasticity: 0.85,
             rolling_friction: 0.05,
             animation: bouncing_ball::AnimationState::Paused,
@@ -49,7 +49,12 @@ impl eframe::App for TemplateApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        let Self { ball, elasticity, rolling_friction, animation } = self;
+        let Self {
+            ball,
+            elasticity,
+            rolling_friction,
+            animation,
+        } = self;
 
         egui::SidePanel::left("side_panel").show(ctx, |ui| {
             ui.heading("Animation control");
@@ -68,13 +73,13 @@ impl eframe::App for TemplateApp {
                 // b.rolling_friction = *rolling_friction;
                 ball.push(b);
             }
-            
+
             // elasticity slider
             ui.add(Slider::new(elasticity, 0.5..=1.0).text("Elasticity"));
-            
+
             // rolling friction slider
             ui.add(Slider::new(rolling_friction, 0.0..=0.1).text("Rolling friction"));
-            
+
             // change animation state on button click
             if ui.button(button_text).clicked() {
                 *animation = match *animation {

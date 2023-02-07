@@ -2,7 +2,6 @@
 use egui::*;
 use random_color::RandomColor;
 
-
 #[derive(serde::Deserialize, serde::Serialize)]
 pub enum AnimationState {
     Paused,
@@ -22,7 +21,9 @@ pub struct Ball {
 }
 
 fn random_color() -> ecolor::Color32 {
-    let color = RandomColor::new().luminosity(random_color::Luminosity::Dark).to_rgb_array();
+    let color = RandomColor::new()
+        .luminosity(random_color::Luminosity::Dark)
+        .to_rgb_array();
     Color32::from_rgb(color[0], color[1], color[2])
 }
 
