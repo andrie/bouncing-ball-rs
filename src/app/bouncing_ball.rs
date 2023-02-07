@@ -38,7 +38,7 @@ impl Ball {
             acceleration: vec2(0.0, -0.5),
             elasticity: 0.85,
             rolling_friction: 0.05,
-            animation: AnimationState::Paused,
+            animation: AnimationState::Active,
         }
     }
 

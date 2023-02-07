@@ -19,7 +19,7 @@ impl Default for TemplateApp {
             ball: vec![bouncing_ball::Ball::new()],
             elasticity: 0.85,
             rolling_friction: 0.05,
-            animation: bouncing_ball::AnimationState::Paused,
+            animation: bouncing_ball::AnimationState::Active,
         }
     }
 }
