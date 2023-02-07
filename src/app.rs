@@ -68,7 +68,7 @@ impl eframe::App for TemplateApp {
             // add ball if button is clicked
             if ui.button("Add Ball").clicked() {
                 let mut b = bouncing_ball::Ball::new();
-                b.change_elastity_friction(&elasticity, &rolling_friction);
+                b.change_elastity_friction(*elasticity, *rolling_friction);
                 // b.elasticity = *elasticity;
                 // b.rolling_friction = *rolling_friction;
                 ball.push(b);

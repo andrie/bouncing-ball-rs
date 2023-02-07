@@ -42,9 +42,9 @@ impl Ball {
         }
     }
 
-    pub fn change_elastity_friction(&mut self, elasticity: &f32, rolling_friction: &f32) {
-        self.elasticity = *elasticity;
-        self.rolling_friction = *rolling_friction;
+    pub fn change_elastity_friction(&mut self, elasticity: f32, rolling_friction: f32) {
+        self.elasticity = elasticity;
+        self.rolling_friction = rolling_friction;
     }
 
     pub fn update(&mut self, painter: &Painter) {
