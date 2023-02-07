@@ -111,6 +111,7 @@ impl eframe::App for TemplateApp {
             ball.draw(painter);
 
             // close the app if esc key pressed
+            #[cfg(target_arch = "wasm32")]
             if ui.input().key_pressed(egui::Key::Escape) {
                 _frame.close();
             }
