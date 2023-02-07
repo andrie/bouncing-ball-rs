@@ -10,14 +10,14 @@ mod bouncing_ball;
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct TemplateApp {
     #[serde(skip)]
-    ball: bouncing_ball::Ball,
+    ball: Vec<bouncing_ball::Ball>,
     animation: bouncing_ball::AnimationState,
 }
 
 impl Default for TemplateApp {
     fn default() -> Self {
         Self {
-            ball: bouncing_ball::Ball::new(),
+            ball: vec!(bouncing_ball::Ball::new()),
             animation: bouncing_ball::AnimationState::Paused,
         }
     }
@@ -53,16 +53,23 @@ impl eframe::App for TemplateApp {
         egui::SidePanel::left("side_panel").show(ctx, |ui| {
             ui.heading("Animation control");
 
+            // dynamically change animation button text
             let button_text = match *animation {
                 bouncing_ball::AnimationState::Paused => "Start Animation",
                 bouncing_ball::AnimationState::Active => "Pause Animation",
             };
 
+            // change animation state on button click
             if ui.button(button_text).clicked() {
                 *animation = match *animation {
                     bouncing_ball::AnimationState::Paused => bouncing_ball::AnimationState::Active,
                     bouncing_ball::AnimationState::Active => bouncing_ball::AnimationState::Paused,
                 }
+            }
+
+            // add ball if button is clicked
+            if ui.button("Add Ball").clicked() {
+                ball.push(bouncing_ball::Ball::new());
             }
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
@@ -101,14 +108,17 @@ impl eframe::App for TemplateApp {
                 Color32::LIGHT_GRAY,
             );
             // update ball position only if animation is active
-            match *animation {
-                bouncing_ball::AnimationState::Active => {
-                    ball.update(&painter);
-                    ui.ctx().request_repaint();
+            if let bouncing_ball::AnimationState::Active = *animation {
+                for b in &mut *ball {
+                    // ball.update(painter);
+                    b.update(painter);
                 }
-                _ => (),
+                ui.ctx().request_repaint();
             }
-            ball.draw(painter);
+            for b in &*ball {
+                // ball.draw(painter);
+                b.draw(painter);
+            }
 
             // close the app if esc key pressed
             #[cfg(not(target_arch = "wasm32"))]
