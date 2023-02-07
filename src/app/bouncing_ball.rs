@@ -1,6 +1,7 @@
 // pub mod bouncing_ball;
 use egui::*;
-use random_color::RandomColor;
+use rand::Rng;
+use colors_transform::{Color};
 
 #[derive(serde::Deserialize, serde::Serialize)]
 pub enum AnimationState {
@@ -21,10 +22,12 @@ pub struct Ball {
 }
 
 fn random_color() -> ecolor::Color32 {
-    let color = RandomColor::new()
-        .luminosity(random_color::Luminosity::Dark)
-        .to_rgb_array();
-    Color32::from_rgb(color[0], color[1], color[2])
+    let h = rand::thread_rng().gen_range(0.0..=359.0);
+    let s = 90.0;
+    let l = 25.0;
+    let rgb = colors_transform::Hsl::from(h, s, l).to_rgb();
+
+    return Color32::from_rgb(rgb.get_red() as u8, rgb.get_green() as u8, rgb.get_blue() as u8);
 }
 
 impl Ball {
