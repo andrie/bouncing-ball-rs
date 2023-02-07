@@ -1,24 +1,30 @@
+use egui::*;
+
+mod bouncing_ball;
+
+// const DARK_BLUE:Color32 = Color32::DARK_BLUE;
+// const DARK_RED:Color32 = Color32::DARK_RED;
+
+
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)] // if we add new fields, give them default values when deserializing old state
 pub struct TemplateApp {
-    // Example stuff:
-    label: String,
-
-    // this how you opt-out of serialization of a member
     #[serde(skip)]
-    value: f32,
+    ball: bouncing_ball::Ball,
+    animation: bouncing_ball::AnimationState,
 }
+
 
 impl Default for TemplateApp {
     fn default() -> Self {
         Self {
-            // Example stuff:
-            label: "Hello World!".to_owned(),
-            value: 2.7,
+            ball: bouncing_ball::Ball::new(),
+            animation: bouncing_ball::AnimationState::Paused,
         }
     }
 }
+
 
 impl TemplateApp {
     /// Called once before the first frame.
@@ -45,36 +51,21 @@ impl eframe::App for TemplateApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        let Self { label, value } = self;
-
-        // Examples of how to create different panels and windows.
-        // Pick whichever suits you.
-        // Tip: a good default choice is to just keep the `CentralPanel`.
-        // For inspiration and more examples, go to https://emilk.github.io/egui
-
-        #[cfg(not(target_arch = "wasm32"))] // no File->Quit on web pages!
-        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
-            // The top panel is often a good place for a menu bar:
-            egui::menu::bar(ui, |ui| {
-                ui.menu_button("File", |ui| {
-                    if ui.button("Quit").clicked() {
-                        _frame.close();
-                    }
-                });
-            });
-        });
+        let Self {  ball , animation} = self;
 
         egui::SidePanel::left("side_panel").show(ctx, |ui| {
-            ui.heading("Side Panel");
+            ui.heading("Animation control");
 
-            ui.horizontal(|ui| {
-                ui.label("Write something: ");
-                ui.text_edit_singleline(label);
-            });
+            let button_text = match *animation {
+                bouncing_ball::AnimationState::Paused => "Start Animation",
+                bouncing_ball::AnimationState::Active => "Pause Animation",
+            };
 
-            ui.add(egui::Slider::new(value, 0.0..=10.0).text("value"));
-            if ui.button("Increment").clicked() {
-                *value += 1.0;
+            if ui.button(button_text).clicked() {
+                *animation = match *animation {
+                    bouncing_ball::AnimationState::Paused => bouncing_ball::AnimationState::Active,
+                    bouncing_ball::AnimationState::Active => bouncing_ball::AnimationState::Paused
+                }
             }
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
@@ -94,14 +85,39 @@ impl eframe::App for TemplateApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
-
-            ui.heading("eframe template");
-            ui.hyperlink("https://github.com/emilk/eframe_template");
+            ui.heading("central panel");
+            ui.hyperlink("https://github.com/emilk/bouncing_ball");
             ui.add(egui::github_link_file!(
-                "https://github.com/emilk/eframe_template/blob/master/",
+                "https://github.com/emilk/bouncing_ball/blob/master/",
                 "Source code."
             ));
             egui::warn_if_debug_build(ui);
+            let rect = ui.max_rect();
+            let painter = &ui.painter_at(rect);
+            // draw background
+            painter.rect_filled(
+                Rect::from_min_max(
+                    painter.clip_rect().left_top() + vec2(0.0, 0.0),
+                    painter.clip_rect().right_bottom() + vec2(0.0, -0.0)
+                ), 
+                3.0,
+                Color32::LIGHT_GRAY,
+            );
+            // update ball position only if animation is active
+            match *animation {
+                bouncing_ball::AnimationState::Active => {
+                    ball.update(&painter);
+                    ui.ctx().request_repaint();
+                },
+                _ => ()
+            }
+            ball.draw(painter); 
+
+            // close the app if esc key pressed
+            if ui.input().key_pressed(egui::Key::Escape) {
+                _frame.close();
+            }
+
         });
 
         if false {
