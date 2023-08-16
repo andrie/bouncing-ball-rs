@@ -28,7 +28,9 @@ fn main() {
             .start(
                 "the_canvas_id", // hardcode it
                 web_options,
-                Box::new(|cc| Box::new(bouncing_ball::TemplateApp::new(cc))),
+                Box::new(|cc| {
+                    Box::new(bouncing_ball::TemplateApp::new(cc))
+                }),
             )
             .await
             .expect("failed to start eframe");
