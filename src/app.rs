@@ -138,7 +138,7 @@ impl eframe::App for TemplateApp {
 
             // close the app if esc key pressed
             #[cfg(not(target_arch = "wasm32"))]
-            if ui.input().key_pressed(egui::Key::Escape) {
+            if ui.input(|i| i.key_pressed(egui::Key::Escape)) {
                 _frame.close();
             }
         });

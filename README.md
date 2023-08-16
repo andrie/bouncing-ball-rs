@@ -17,9 +17,18 @@ On Fedora Rawhide you need to run:
 
 `dnf install clang clang-devel clang-tools-extra speech-dispatcher-devel libxkbcommon-devel pkg-config openssl-devel libxcb-devel fontconfig-devel`
 
+On Windows install the VS-Code build tools from <https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019> (the free one is enough).
+
 ### Web Locally
 
 You can compile your app to [WASM](https://en.wikipedia.org/wiki/WebAssembly) and publish it as a web page.
+
+Install the wasm target with
+
+``` bash
+rustup target add wasm32-unknown-unknown
+```
+
 
 We use [Trunk](https://trunkrs.dev/) to build for web target.
 1. Install Trunk with `cargo install --locked trunk`.
