@@ -24,7 +24,7 @@ pub struct Ball {
 fn random_color() -> ecolor::Color32 {
     let h = rand::thread_rng().gen_range(0.0..=359.0);
     let s = 90.0;
-    let l = 25.0;
+    let l = 50.0;
     let rgb = colors_transform::Hsl::from(h, s, l).to_rgb();
 
     Color32::from_rgb(

@@ -16,7 +16,8 @@ pub struct TemplateApp {
 impl Default for TemplateApp {
     fn default() -> Self {
         Self {
-            ball: vec![bouncing_ball::Ball::new()],
+            // ball: vec![bouncing_ball::Ball::new()],
+            ball: Vec::new(),
             elasticity: 0.85,
             rolling_friction: 0.05,
             animation: bouncing_ball::AnimationState::Active,
@@ -41,7 +42,7 @@ impl TemplateApp {
 }
 
 impl eframe::App for TemplateApp {
-    /// Called by the frame work to save state before shutdown.
+    /// Called by the framework to save state before shutdown.
     fn save(&mut self, storage: &mut dyn eframe::Storage) {
         eframe::set_value(storage, eframe::APP_KEY, self);
     }
@@ -67,11 +68,9 @@ impl eframe::App for TemplateApp {
 
             // add ball if button is clicked
             if ui.button("Add Ball").clicked() {
-                let mut b = bouncing_ball::Ball::new();
-                b.change_elastity_friction(*elasticity, *rolling_friction);
-                // b.elasticity = *elasticity;
-                // b.rolling_friction = *rolling_friction;
-                ball.push(b);
+                let mut new_ball = bouncing_ball::Ball::new();
+                new_ball.change_elastity_friction(*elasticity, *rolling_friction);
+                ball.push(new_ball);
             }
 
             // elasticity slider
