@@ -7,11 +7,36 @@
 
 Make sure you are using the latest version of stable rust by running `rustup update`.
 
-`cargo run --release`
+```
+cargo run --release
+```
+
+#### Wayland crash workaround (Linux)
+
+On some Wayland setups the native run may panic with errors like:
+
+```
+interface 'wl_surface' has no event 2
+thread 'main' panicked at glutin-0.30.3/src/api/egl/surface.rs:219: called `Option::unwrap()` on a `None` value
+```
+
+This stems from the EGL/Wayland path in `glutin` used by `eframe`. A workaround is to force the X11 backend for `winit`:
+
+```bash
+WINIT_UNIX_BACKEND=x11 cargo run --release
+```
+
+If you need more details for debugging, enable a backtrace:
+
+```bash
+RUST_BACKTRACE=1 cargo run --release
+```
 
 On Linux you need to first run:
 
-`sudo apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libspeechd-dev libxkbcommon-dev libssl-dev`
+```
+sudo apt-get install libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev libspeechd-dev libxkbcommon-dev libssl-dev
+```
 
 On Fedora Rawhide you need to run:
 
